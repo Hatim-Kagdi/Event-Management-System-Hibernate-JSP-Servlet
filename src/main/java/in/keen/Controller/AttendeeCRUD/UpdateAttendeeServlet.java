@@ -1,7 +1,8 @@
-package in.keen.Controller.AdminPortal;
+package in.keen.Controller.AttendeeCRUD;
 
 import java.io.IOException;
 
+import in.keen.DAO.AttendeeDAO;
 import in.keen.DAO.UserDAO;
 import in.keen.Entity.User;
 import jakarta.servlet.ServletException;
@@ -34,7 +35,7 @@ public class UpdateAttendeeServlet extends HttpServlet{
 		user.setUserName(userName);
 		user.setUserEmail(userEmail);
 
-		UserDAO dao = new UserDAO();
+		AttendeeDAO dao = new AttendeeDAO();
 		boolean update = dao.updateAttendee(user, userBio, image);
 		
 		if(update) {

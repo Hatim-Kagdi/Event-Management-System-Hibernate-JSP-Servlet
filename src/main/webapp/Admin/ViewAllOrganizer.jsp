@@ -6,13 +6,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>All Attendees Data</title>
+<title>View All Organizer Page</title>
 </head>
 <body>
 	<%
-	List<User> attendeeList = (List<User>) request.getAttribute("attendeeList");
+	List<User> list = (List<User>) request.getAttribute("organizerList");
 	%>
-	<h3>All Attendees Table</h3>
+
 	<table border="1">
 		<thead>
 			<tr>
@@ -21,15 +21,15 @@
 				<th>Email</th>
 				<th>Bio</th>
 				<th>Profile Picture</th>
-				<th>Edit</th>
-				<th>Delete</th>
+				<th>EDIT</th>
+				<th>DELETE</th>
 			</tr>
 		</thead>
-		<%
-		if (attendeeList != null) {
-			for (User u : attendeeList) {
-		%>
 		<tbody>
+			<%
+			if (list != null && !list.isEmpty()) {
+				for (User u : list) {
+			%>
 			<tr>
 				<td><%=u.getUserId()%></td>
 				<td><%=u.getUserName()%></td>
@@ -39,17 +39,20 @@
 					src="<%=request.getContextPath()%>/viewProfilePicture?id=<%=u.getUserId()%>"
 					width="100" height="100"></td>
 				<td><a
-					href="<%=request.getContextPath()%>/editAttendee?id=<%=u.getUserId()%>"><button>EDIT</button></a></td>
-				<td><a href="<%=request.getContextPath()%>/deleteAttendee?id=<%= u.getUserId() %>"><button>DELETE</button></a></td>
+					href="<%=request.getContextPath()%>/editOrganizer?id=<%=u.getUserId()%>">
+						<button>EDIT</button>
+				</a></td>
+				<td><a
+					href="<%=request.getContextPath()%>/deleteOrganizer?id=<%=u.getUserId()%>">
+						<button>DELETE</button>
+				</a>
 			</tr>
+			<%
+			}
+			}
+			%>
 		</tbody>
-		<%
-		}
-		}
-		%>
 	</table>
-	<br>
-	<a href="<%=request.getContextPath()%>/DashBoard/AdminDashboard.jsp"><button>Back</button></a>
-
+	<a href="<%=request.getContextPath()%>/DashBoard/AdminDashboard.jsp"><button>BACK</button></a>
 </body>
 </html>

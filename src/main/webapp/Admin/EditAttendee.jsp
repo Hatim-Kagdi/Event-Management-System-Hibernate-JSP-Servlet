@@ -26,7 +26,7 @@
 		<textarea name="userBio"><%=user.getProfile().getUserBio()%></textarea>
 		<br> <br> Profile Picture : <input type="file"
 			name="userProfilePicture"><br> <img
-			src="<%=request.getContextPath()%>/viewProfilePicture?userId=<%=user.getUserId()%>"
+			src="<%=request.getContextPath()%>/viewProfilePicture?id=<%=user.getUserId()%>"
 			 width="100" height="100"><br> <br>
 		<button type="submit">UPDATE</button>
 	</form>

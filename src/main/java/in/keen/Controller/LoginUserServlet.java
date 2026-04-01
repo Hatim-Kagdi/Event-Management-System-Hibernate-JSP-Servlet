@@ -24,7 +24,9 @@ public class LoginUserServlet extends HttpServlet {
 
 		if (user != null) {
 			HttpSession session = req.getSession();
-			session.setAttribute("session_user", user);
+			session.setAttribute("userId", user.getUserId());
+			session.setAttribute("userName", user.getUserName());
+			session.setAttribute("userRole", user.getUserRole().name());
 			
 			if (user.getUserRole() == User.Role.ADMIN) {
 	            resp.sendRedirect(req.getContextPath() + "/DashBoard/AdminDashboard.jsp");

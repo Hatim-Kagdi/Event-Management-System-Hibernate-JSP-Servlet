@@ -1,8 +1,9 @@
-package in.keen.Controller.AdminPortal;
+package in.keen.Controller.AttendeeCRUD;
 
 import java.io.IOException;
 import java.util.List;
 
+import in.keen.DAO.AttendeeDAO;
 import in.keen.DAO.UserDAO;
 import in.keen.Entity.User;
 import jakarta.servlet.ServletException;
@@ -15,9 +16,9 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ViewAllAttendeeServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		UserDAO udao = new UserDAO();
+		AttendeeDAO dao = new AttendeeDAO();
 		
-		List<User> list = udao.getAllAttendee();
+		List<User> list = dao.getAllAttendee();
 		
 		if(list != null && !list.isEmpty()) {
 			req.setAttribute("attendeeList", list);

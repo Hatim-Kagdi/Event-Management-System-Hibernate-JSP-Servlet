@@ -9,23 +9,21 @@
 </head>
 <body>
 	<%
-	User user = (User) session.getAttribute("session_user");
-	if(user == null){
-		response.sendRedirect(request.getContextPath() + "/login.jsp");
-	}
+	String userName = (String) session.getAttribute("userName");
+	int userId = (Integer) session.getAttribute("userId");
 	%>
 	<h2>
 		WELCOME!
-		<%=user.getUserName()%></h2>
+		<%=userName%></h2>
 	<hr>
 	<ul>
 		<li><a
-			href="<%=request.getContextPath()%>/ViewUserProfile?id=<%=user.getUserId()%>">View
+			href="<%=request.getContextPath()%>/ViewUserProfile?id=<%=userId%>">View
 				My Profile</a></li>
 		<li><a href="<%=request.getContextPath()%>/ViewAllAttendee">View
 				All Attendees </a></li>
 		<li><a
-			href="<%=request.getContextPath()%>/ViewAllOrganizer?id=<%=user.getUserId()%>">View
+			href="<%=request.getContextPath()%>/ViewAllOrganizer">View
 				All Organizers </a></li>
 	</ul>
 

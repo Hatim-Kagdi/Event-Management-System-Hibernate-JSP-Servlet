@@ -1,30 +1,30 @@
-package in.keen.Controller;
+package in.keen.Controller.OrganizerCRUD;
 
 import java.io.IOException;
 
-import in.keen.DAO.ProfileDAO;
-import in.keen.Entity.Profile;
+import in.keen.DAO.UserDAO;
 import in.keen.Entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/viewProfilePicture")
-public class ViewProfileImageServlet extends HttpServlet {
+@WebServlet("/editOrganizer")
+public class EditOrganizerServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int id = Integer.parseInt(req.getParameter("id"));
 		
-		ProfileDAO pdao = new ProfileDAO();
+		UserDAO dao = new UserDAO();
 		
-		byte[] image = pdao.getProfilePictureById(id);
+		User user = dao.getUserProfileDetails(id);
 		
-		if(image != null) {
-			resp.setContentType("image/jpeg");
-			resp.getOutputStream().write(image);
+		if(user != null) {
+			req.setAttribute("organizerDetails", user);
+			req.getRequestDispatcher("/Admin/EditOrganizer.jsp").forward(req, resp);
+		}else {
+			resp.sendRedirect(req.getContextPath() + "/Admin/ViewAllOrgnizer.jsp?msg=error");
 		}
 		
 	}

@@ -29,7 +29,7 @@ public class AuthenticationFilter implements Filter {
 				|| uri.contains("register") || uri.contains(".css") || uri.contains(".js") || uri.contains(".png")
 				|| uri.contains(".jpg");
 
-		boolean isLoggedIn = (session != null && session.getAttribute("session_user") != null);
+		boolean isLoggedIn = (session != null && session.getAttribute("userId") != null);
 
 		if (isPublic || isLoggedIn) {
 			chain.doFilter(request, response);

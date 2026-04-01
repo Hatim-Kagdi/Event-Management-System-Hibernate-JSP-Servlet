@@ -1,29 +1,28 @@
-package in.keen.Controller.AdminPortal;
+package in.keen.Controller.OrganizerCRUD;
 
 import java.io.IOException;
 
-import in.keen.DAO.UserDAO;
+import java.util.List;
+
+import in.keen.DAO.OrganizerDAO;
 import in.keen.Entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/editAttendee")
-public class EditAttendeeServlet extends HttpServlet{
+@WebServlet("/ViewAllOrganizer")
+public class ViewAllOrganizerServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		int id = Integer.parseInt(req.getParameter("id"));
+		OrganizerDAO dao = new OrganizerDAO();
 		
-		UserDAO dao = new UserDAO();
+		List<User> list = dao.getAllOrganizer();
 		
-		User user = dao.getUserProfileDetails(id);
-		
-		if(user != null) {
-		req.setAttribute("attendeeList", user);
-		req.getRequestDispatcher("/Admin/EditAttendee.jsp").forward(req, resp);
+		if(list != null && !list.isEmpty()) {
+			req.setAttribute("organizerList", list);
+			req.getRequestDispatcher("/Admin/ViewAllOrganizer.jsp").forward(req, resp);
 		}else {
 			resp.sendRedirect(req.getContextPath() + "/DashBoard/AdminDashboard.jsp");
 		}

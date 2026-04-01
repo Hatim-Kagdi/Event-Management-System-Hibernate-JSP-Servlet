@@ -16,6 +16,7 @@
 	
 	<mapping class="in.keen.Entity.User"></mapping>
 	<mapping class="in.keen.Entity.Profile"></mapping>
+	<mapping class="in.keen.Entity.Event"></mapping>
 	
 	</session-factory>
 	</hibernate-configuration>

@@ -1,4 +1,4 @@
-package in.keen.Controller.AdminPortal;
+package in.keen.Controller;
 
 import java.io.IOException;
 
@@ -24,7 +24,15 @@ public class ViewUserProfileServlet extends HttpServlet{
 		
 		if(user != null) {
  			req.setAttribute("userProfileDetails", user);
-			req.getRequestDispatcher("/Admin/UserProfile.jsp").forward(req, resp);
+ 			if (user.getUserRole() == User.Role.ADMIN) {
+ 				req.getRequestDispatcher("/Admin/UserProfile.jsp").forward(req, resp);
+	        } 
+	        else if (user.getUserRole() == User.Role.ORGANIZER) {
+	        	req.getRequestDispatcher("/Organizer/OrganizerProfile.jsp").forward(req, resp);
+	        } 
+	        else {
+	        	req.getRequestDispatcher("/Attendee/AttendeeProfile.jsp").forward(req, resp);
+	        }
 		}else {
 			resp.sendRedirect(req.getContextPath() + "/DashBoard/AdminDashboard.jsp?error");
 		}

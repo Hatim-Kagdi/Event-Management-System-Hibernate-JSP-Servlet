@@ -1,0 +1,10 @@
+src/main/resources/hibernate.cfg.xml
+
+.settings/
+.classpath
+.project
+build/
+bin/
+.metadata/
+target/
+*.class

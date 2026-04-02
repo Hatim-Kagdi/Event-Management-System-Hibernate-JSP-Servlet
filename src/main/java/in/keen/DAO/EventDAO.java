@@ -27,10 +27,10 @@ public class EventDAO {
 		}
 	}
 
-	public List<Event> getAllEvents(int organizerId) {
+	public List<Object[]> getAllEvents(int organizerId) {
 		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
-			String query = "FROM Event e WHERE e.isActive = true AND e.organizer.userId = :id";
-			return s.createQuery(query, Event.class).setParameter("id", organizerId).list();
+			String query = "SELECT e, (SELECT COUNT(b) FROM Booking b WHERE b.event = e AND b.status = 'CONFIRMED') FROM Event e WHERE e.isActive = true AND e.organizer.userId = :id";
+			return s.createQuery(query).setParameter("id", organizerId).list();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -84,6 +84,16 @@ public class EventDAO {
 			if(t != null) t.rollback();
 			e.printStackTrace();
 			return false;
+		}
+	}
+	
+	public List<Event> getAllEventsForAttendee(){
+		try(Session s = HibernateUtil.getSessionFactory().openSession()){
+			String query = "SELECT e FROM Event e JOIN FETCH e.organizer WHERE e.isActive = true";
+			return s.createQuery(query ,Event.class).list();
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 }

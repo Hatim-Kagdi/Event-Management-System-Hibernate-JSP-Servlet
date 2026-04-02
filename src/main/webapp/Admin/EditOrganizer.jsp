@@ -29,7 +29,7 @@
 	<br>
 	<br>
 
-	<a href="<%=request.getContextPath()%>/ViewAllAttendee"><button>BACK</button></a>
+	<a href="<%=request.getContextPath()%>/ViewAllOrganizer"><button>BACK</button></a>
 
 </body>
 </html>

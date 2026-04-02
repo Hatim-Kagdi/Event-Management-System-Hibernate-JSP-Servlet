@@ -12,8 +12,8 @@
 	<h3>Events Table</h3>
 	<hr>
 	<%
-	List<Event> event = (List<Event>) request.getAttribute("eventList");
-	if (event == null || event.isEmpty()) {
+	List<Object[]> data = (List<Object[]>) request.getAttribute("eventData");
+	if (data == null) {
 	%>
 	<p>No Event Found!</p>
 	<a href="<%=request.getContextPath()%>/Organizer/AddNewEvent.jsp">Create
@@ -23,7 +23,7 @@
 	<%
 	} else {
 	%>
-	<table border="1">
+	<table border="1" cellpadding="10">
 		<thead>
 			<tr>
 				<th>Event Id</th>
@@ -33,13 +33,17 @@
 				<th>Time</th>
 				<th>Venue</th>
 				<th>Capacity</th>
+				<th>Bookings</th>
+				<th>View Bookings</th>
 				<th>EDIT</th>
 				<th>DELETE</th>
 			</tr>
 		</thead>
 		<tbody>
 			<%
-			for (Event e : event) {
+			for (Object[] obj : data) {
+				Event e = (Event) obj[0];
+				Long count =(Long) obj[1];
 			%>
 			<tr>
 				<td><%=e.getEventId()%></td>
@@ -49,6 +53,9 @@
 				<td><%=e.getEventTime()%></td>
 				<td><%=e.getEventVenue()%></td>
 				<td><%=e.getMaxCapacity()%></td>
+				<td><%= count %></td>
+				<td><a href="<%= request.getContextPath()%>/ViewBookedAttendees?id=<%= e.getEventId() %>"> View </a>
+				</td>
 				<td><a
 					href="<%=request.getContextPath()%>/editEvent?id=<%=e.getEventId()%>"><button>EDIT</button></a>
 				<td><a

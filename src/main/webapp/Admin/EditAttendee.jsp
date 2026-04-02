@@ -32,6 +32,6 @@
 	</form>
 	<br>
 	<br>
-	<a href="<%=request.getContextPath()%>/DashBoard/AdminDashboard.jsp"><button>BACK</button></a>
+	<a href="<%=request.getContextPath()%>/ViewAllAttendee"><button>BACK</button></a>
 </body>
 </html>

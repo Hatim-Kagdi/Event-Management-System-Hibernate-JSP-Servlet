@@ -16,15 +16,21 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ViewAllOrganizerServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int page = 1;
+		if(req.getParameter("page") != null) {
+			page = Integer.parseInt(req.getParameter("page"));
+		}
+		int pageSize = 2;
 		OrganizerDAO dao = new OrganizerDAO();
 		
-		List<User> list = dao.getAllOrganizer();
+		List<User> list = dao.getOrganizerPagination(page, pageSize);
+		Long totalRecords =  dao.getAllOrganizerCount();
+		int totalPages = (int) Math.ceilDiv(totalRecords, pageSize);
 		
-		if(list != null && !list.isEmpty()) {
+			
 			req.setAttribute("organizerList", list);
+			req.setAttribute("currentPage", page);
+			req.setAttribute("totalPages", totalPages);
 			req.getRequestDispatcher("/Admin/ViewAllOrganizer.jsp").forward(req, resp);
-		}else {
-			resp.sendRedirect(req.getContextPath() + "/DashBoard/AdminDashboard.jsp");
-		}
 	}
 }

@@ -51,23 +51,75 @@ public class OrganizerDAO {
 			return false;
 		}
 	}
-	
-	//Delete Organizer
+
+	// Delete Organizer
 	public boolean deleteOrganizer(int id) {
 		Transaction t = null;
-		try(Session s = HibernateUtil.getSessionFactory().openSession()){
+		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
 			t = s.beginTransaction();
 			User user = s.get(User.class, id);
-			if(user != null) {
+			if (user != null) {
 				user.setIs_deleted(true);
 			}
 			s.update(user);
 			t.commit();
 			return true;
-		}catch(Exception e) {
-			if(t != null) t.rollback();
+		} catch (Exception e) {
+			if (t != null)
+				t.rollback();
 			e.printStackTrace();
 			return false;
+		}
+	}
+	
+	
+	//Search
+	public List<User> getSearchedOrganizer(String searchQuery, int page, int pageSize) {
+		List<User> list = null;
+		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+			int offset = (page - 1)*pageSize;
+			String query = "SELECT u FROM User u JOIN FETCH u.profile WHERE (str(u.userId) LIKE :search OR u.userName LIKE :search) AND u.is_deleted = false AND u.userRole = 'ORGANIZER'";
+			list = s.createQuery(query, User.class)
+					.setFirstResult(offset)
+					.setMaxResults(pageSize)
+					.setParameter("search", "%" + searchQuery + "%")
+					.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public Long getSearchedOrganizerCount(String searchQuery) {
+		try(Session s = HibernateUtil.getSessionFactory().openSession()){
+			String query = "SELECT COUNT(u) FROM User u WHERE (str(u.userId) LIKE :search OR u.userName LIKE :search) AND u.is_deleted = false AND u.userRole = 'ORGANIZER'";
+			return s.createQuery(query, Long.class).setParameter("search", "%" + searchQuery + "%").uniqueResult();
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	// Pagination
+	public List<User> getOrganizerPagination(int page, int pageSize) {
+		List<User> list = null;
+		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+			int offset = (page - 1) * pageSize;
+			String query = "SELECT u FROM User u JOIN FETCH u.profile WHERE u.is_deleted = false AND u.userRole = 'ORGANIZER'";
+			list = s.createQuery(query, User.class).setFirstResult(offset).setMaxResults(pageSize).list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public Long getAllOrganizerCount() {
+		try(Session s = HibernateUtil.getSessionFactory().openSession()){
+			String query = "SELECT COUNT(u) FROM User u WHERE u.is_deleted = false AND u.userRole = 'ORGANIZER'";
+			return s.createQuery(query, Long.class).uniqueResult();
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 }

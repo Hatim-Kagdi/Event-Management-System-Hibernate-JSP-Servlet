@@ -3,26 +3,26 @@ package in.keen.Controller.OrganizerPortal;
 import java.io.IOException;
 import java.util.List;
 
-import in.keen.DAO.EventDAO;
-import in.keen.Entity.Event;
+import in.keen.DAO.BookingDAO;
+import in.keen.Entity.Booking;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/ViewAllEvents")
-public class ViewAllEventsServlet extends HttpServlet{
+@WebServlet("/ViewBookedAttendees")
+public class ViewBookedAttendeesServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Integer organizerId = (Integer) req.getSession().getAttribute("userId");
+		int eventId = Integer.parseInt(req.getParameter("id"));
 		
-		EventDAO dao = new EventDAO();
+		BookingDAO dao = new BookingDAO();
 		
-		List<Object[]> list = dao.getAllEvents(organizerId);
-
-			req.setAttribute("eventData", list);
-			req.getRequestDispatcher("/Organizer/ViewAllEvents.jsp").forward(req, resp);
+		List<Booking> list = dao.getBookingForEvent(eventId);
+		
+		req.setAttribute("bookingAttendeeList", list);
+		req.getRequestDispatcher("/Organizer/ViewBookedAttendee.jsp").forward(req, resp);
 		
 	}
 }

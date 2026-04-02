@@ -12,26 +12,32 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/ViewAllAttendee")
-public class ViewAllAttendeeServlet extends HttpServlet {
+@WebServlet("/SearchAttendeeForAdmin")
+public class SearchAttendeeServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int page = 1;
-		if (req.getParameter("page") != null) {
+		if(req.getParameter("page") != null) {
 			page = Integer.parseInt(req.getParameter("page"));
 		}
-
 		int pageSize = 2;
-
+		String searchQuery = req.getParameter("searchQuery");
+		List<User> list;
 		AttendeeDAO dao = new AttendeeDAO();
-
-		List<User> list = dao.getAttendeePaginated(page, pageSize);
-		Long totalRecords = dao.getAllAttendeeCount();
-		int totalPages = (int) Math.ceilDiv(totalRecords, pageSize);
-
+		int totalPages;
+		if (searchQuery == null || searchQuery.trim().isEmpty()) {
+			list = dao.getAttendeePaginated(page, pageSize);
+			Long totalRecords = dao.getAllAttendeeCount();
+			totalPages = (int) Math.ceilDiv(totalRecords, pageSize);
+		} else {
+			list = dao.getAttendeeBySearchQuery(searchQuery, page, pageSize);
+			Long totalRecords = dao.getSearchedAttendeeCount(searchQuery);
+			totalPages = (int) Math.ceilDiv(totalRecords, pageSize);
+		}
 		req.setAttribute("attendeeList", list);
 		req.setAttribute("currentPage", page);
 		req.setAttribute("totalPages", totalPages);
+		req.setAttribute("searchQuery", searchQuery);
 		req.getRequestDispatcher("/Admin/ViewAllAttendee.jsp").forward(req, resp);
 	}
 }

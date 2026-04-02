@@ -10,6 +10,10 @@
 	<%
 	String userName = (String) session.getAttribute("userName");
 	int userId = (int) session.getAttribute("userId");
+	
+	if(userName == null){
+		response.sendRedirect(request.getContextPath() + "/login.jsp?msg=sessionExpired");
+	}
 	%>
 	<h3>
 		Welcome!

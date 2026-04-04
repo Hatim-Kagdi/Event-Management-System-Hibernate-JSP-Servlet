@@ -11,15 +11,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/ViewAllPublicEvents")
-public class ViewAllEventsForBookingServlet extends HttpServlet{
+@WebServlet("/SearchEvent")
+public class SearchEventServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String searchQuery = req.getParameter("searchQuery");
+		
 		EventDAO dao = new EventDAO();
 		
-		List<Object[]> event = dao.getAllEventsForAttendee();
+		List<Object[]> list = dao.getSearchedEvents(searchQuery);
 		
-		req.setAttribute("eventList" , event);
-		req.getRequestDispatcher("/Attendee/ViewAllEvents.jsp").forward(req, resp);
+		req.setAttribute("eventList", list);
+		req.getRequestDispatcher("/Attendee/ViewAllEvents.jsp").forward(req, resp);;
 	}
 }

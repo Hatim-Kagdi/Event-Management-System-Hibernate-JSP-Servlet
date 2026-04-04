@@ -73,11 +73,14 @@
 		<%
 		int currentPage = (Integer) request.getAttribute("currentPage");
 		int totalPages = (Integer) request.getAttribute("totalPages");
+		String currentSearch = (String) request.getAttribute("searchQuery");
+	    String searchParam = (currentSearch != null) ? "&searchQuery=" + currentSearch : "";
+	    String servletPath = (currentSearch != null) ? "SearchAttendeeForAdmin" : "ViewAllAttendee";
 
 		if (currentPage > 1) {
 		%>
 		<a
-			href="<%=request.getContextPath()%>/ViewAllOrganizer?page=<%=currentPage - 1%>">&laquo;
+			href="<%=request.getContextPath()%>/<%= servletPath %>?page=<%=currentPage - 1%><%= searchParam %>">&laquo;
 			Previous</a>
 		<%
 		}
@@ -87,7 +90,7 @@
 		if (currentPage < totalPages) {
 		%>
 		<a
-			href="<%=request.getContextPath()%>/ViewAllOrganizer?page=<%=currentPage + 1%>">Next
+			href="<%=request.getContextPath()%>/<%= servletPath %>?page=<%=currentPage + 1%><%= searchParam%>">Next
 			&raquo;</a>
 		<%
 		}

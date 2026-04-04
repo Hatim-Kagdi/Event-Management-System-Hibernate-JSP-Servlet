@@ -57,19 +57,26 @@
 </style>
 </head>
 <body>
+<h2> All Active Events </h2>
+	<hr>
 	<%
-	List<Event> list = (List<Event>) request.getAttribute("eventList");
+	List<Object[]> list = (List<Object[]>) request.getAttribute("eventList");
 	if (list == null || list.isEmpty()) {
 	%>
 	<p>No Active Events Right Now , ComeBack later!</p>
 	<%
-	}
+	}else{
 	%>
-	<h2> All Active Events </h2>
-	<hr>
-	<div class="event-contianer">
+	<form action="<%= request.getContextPath()%>/SearchEvent" method="get">
+	<input type="text" name="searchQuery" placeholder="Enter Event Name...">
+	<button type="submit">Search</button>
+	<button type="submit">Reset</button>
+	</form><br>
+	<div class="event-container">
 		<%
-		for (Event e : list) {
+		for (Object[] row : list) {
+			Event e = (Event) row[0];
+			Long currentCount = (Long) row[1];
 		%>
 		<div class="event-card">
 			<div class="event-header">
@@ -78,23 +85,28 @@
 				<small><b>Organized By : <%=e.getOrganizer().getUserName()%></b></small>
 			</div>
 			<div class="event-body">
-				<p><%=e.getEventDescription()%></p>
-				<p><%=e.getEventDate()%></p>
-				<p><%=e.getEventTime()%></p>
-				<p><%=e.getEventVenue()%></p>
-				<p><%=e.getMaxCapacity()%></p>
+				<p>Description :<%=e.getEventDescription()%></p>
+				<p>Date :<%=e.getEventDate()%></p>
+				<p>Time :<%=e.getEventTime()%></p>
+				<p>Venue :<%=e.getEventVenue()%></p>
+				<p>Max Capacity :<%=e.getMaxCapacity()%></p>
 			</div>
 			<div class=event-footer></div>
+			<% if(currentCount >= e.getMaxCapacity()){ %>
+			<button disabled style="background-color: #ccc; cursor: not-allowed;">SOLD OUT</button>
+			<%} else { %>
 			<form action="<%=request.getContextPath()%>/BookEvent" method="post">
 				<input type="hidden" name="eventId" value="<%=e.getEventId()%>">
 				<button type="submit" class="btn-book">BOOK MY SPOT</button>
 			</form>
+			<%} %>
 		</div>
-		<br><br>
+		
 		<%
 		}
 		%>
 	</div>
+	<%} %>
 	<br><br>
 	<a href="<%=request.getContextPath()%>/DashBoard/AttendeeDashboard.jsp"><button>BACK</button></a>
 

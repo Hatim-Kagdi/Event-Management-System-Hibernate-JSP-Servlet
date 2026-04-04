@@ -76,4 +76,15 @@ public class BookingDAO {
 		}
 		return list;
 	}
+	
+	public boolean isAlreadyBooked(int eventId, int attendeeId) {
+		try(Session s = HibernateUtil.getSessionFactory().openSession()){
+			String query = "SELECT COUNT(b) FROM Booking b WHERE b.attendee.userId = :aId AND b.event.eventId = :eId AND b.status = 'CONFIRMED'";
+			Long count = s.createQuery(query, Long.class).setParameter("aId", attendeeId).setParameter("eId", eventId).uniqueResult();
+			return count > 0 && count != null ? true : false;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

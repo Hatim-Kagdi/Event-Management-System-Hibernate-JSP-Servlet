@@ -23,6 +23,12 @@ public class BookAnEventServlet extends HttpServlet{
 		int attendeeId = (Integer) session.getAttribute("userId");
 		
 		BookingDAO dao = new BookingDAO();
+		
+		boolean duplicate = dao.isAlreadyBooked(eventId, attendeeId);
+		if(duplicate){
+			resp.sendRedirect(req.getContextPath() +"/ViewAllPublicEvents?msg=already_booked");
+			return;
+		}
 		String result = dao.createBooking(attendeeId, eventId);
 		
 		if("SUCCESS" .equals(result)) {

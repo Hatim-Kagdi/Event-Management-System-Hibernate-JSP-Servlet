@@ -36,22 +36,22 @@ public class EventDAO {
 			return null;
 		}
 	}
-	
+
 	public Event getEventById(int id) {
-		try(Session s = HibernateUtil.getSessionFactory().openSession()){
+		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
 			return s.get(Event.class, id);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 	public boolean updateEvent(Event event) {
 		Transaction t = null;
-		try(Session s = HibernateUtil.getSessionFactory().openSession()){
+		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
 			t = s.beginTransaction();
 			Event existingEvent = s.get(Event.class, event.getEventId());
-			if(existingEvent != null) {
+			if (existingEvent != null) {
 				existingEvent.setEventName(event.getEventName());
 				existingEvent.setEventDescription(event.getEventDescription());
 				existingEvent.setEventDate(event.getEventDate());
@@ -62,38 +62,52 @@ public class EventDAO {
 				return true;
 			}
 			return false;
-		}catch(Exception e) {
-			if(t != null) t.rollback();
+		} catch (Exception e) {
+			if (t != null)
+				t.rollback();
 			e.printStackTrace();
 			return false;
 		}
 	}
-	
+
 	public boolean deleteEvent(int id) {
 		Transaction t = null;
-		try(Session s = HibernateUtil.getSessionFactory().openSession()){
+		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
 			t = s.beginTransaction();
 			Event existing = s.get(Event.class, id);
-			if(existing != null) {
-			existing.setActive(false);
-			t.commit();
-			return true;
+			if (existing != null) {
+				existing.setActive(false);
+				t.commit();
+				return true;
 			}
 			return false;
-		}catch(Exception e) {
-			if(t != null) t.rollback();
+		} catch (Exception e) {
+			if (t != null)
+				t.rollback();
 			e.printStackTrace();
 			return false;
 		}
 	}
-	
-	public List<Event> getAllEventsForAttendee(){
-		try(Session s = HibernateUtil.getSessionFactory().openSession()){
-			String query = "SELECT e FROM Event e JOIN FETCH e.organizer WHERE e.isActive = true";
-			return s.createQuery(query ,Event.class).list();
-		}catch(Exception e) {
+
+	public List<Object[]> getAllEventsForAttendee() {
+		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+			String query = "SELECT e,(SELECT COUNT(b) FROM Booking b WHERE b.event = e AND b.status = 'CONFIRMED') FROM Event e JOIN FETCH e.organizer WHERE e.isActive = true";
+			return s.createQuery(query).list();
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	// Search
+	public List<Object[]> getSearchedEvents(String searchQuery) {
+		List<Object[]> list = null;
+		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+			String query = "SELECT e, (SELECT COUNT(b) FROM Booking b WHERE b.event = e AND b.status = 'CONFIRMED') FROM Event e JOIN FETCH e.organizer WHERE (e.eventName LIKE :search OR e.eventVenue = :search) AND e.isActive = true";
+			list = s.createQuery(query).setParameter("search", "%" + searchQuery + "%").list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }

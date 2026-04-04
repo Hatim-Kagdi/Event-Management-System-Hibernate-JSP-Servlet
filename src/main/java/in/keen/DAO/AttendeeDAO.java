@@ -110,7 +110,7 @@ public class AttendeeDAO {
 		List<User> list = null;
 		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
 			int offset = (page - 1) * pageSize;
-			String query = "SELECT u FROM User u WHERE u.is_deleted = false AND u.userRole = 'ATTENDEE'";
+			String query = "SELECT u FROM User u JOIN FETCH u.profile WHERE u.is_deleted = false AND u.userRole = 'ATTENDEE'";
 			list = s.createQuery(query, User.class).setFirstResult(offset).setMaxResults(pageSize).list();
 		} catch (Exception e) {
 			e.printStackTrace();
